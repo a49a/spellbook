@@ -1,5 +1,5 @@
 CREATE TABLE source (
-    id  int,  
+    id  int,
     name  varchar
 ) WITH (
     type ='kafka',

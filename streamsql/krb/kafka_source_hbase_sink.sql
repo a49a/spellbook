@@ -1,5 +1,5 @@
 CREATE TABLE ods (
-    id  INT,  
+    id  INT,
     name  VARCHAR
 ) WITH (
     type ='kafka',

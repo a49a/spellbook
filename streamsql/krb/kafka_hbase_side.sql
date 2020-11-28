@@ -1,11 +1,15 @@
 CREATE TABLE ods_foo (
   id INT,
-  name VARCHAR NOT NULL
+  name VARCHAR
 ) WITH (
-  type ='kafka11',
-  bootstrapServers ='kudu1:9092',
-  offsetReset = 'latest',
-  topic = 'wuren_foo'
+  type ='kafka',
+  bootstrapServers ='cdp003.dtstack.com:9092',
+  topic ='wuren_foo',
+  parallelism ='1',
+  groupId = 'xxxxx',
+  kafka.security.protocol='SASL_PLAINTEXT',
+  kafka.sasl.mechanism='GSSAPI',
+  kafka.sasl.kerberos.service.name='kafka'
 );
 
 CREATE TABLE dim_foo (
@@ -21,9 +25,9 @@ CREATE TABLE dim_foo (
   parallelism ='1',
   cache ='LRU',
   hbase.security.auth.enable='true',
-  hbase.security.authentication='kerberos', 
+  hbase.security.authentication='kerberos',
   hbase.sasl.clientconfig='HBaseClient',
-  hbase.kerberos.regionserver.principal='hbase/_HOST@DTSTACK.COM',  
+  hbase.kerberos.regionserver.principal='hbase/_HOST@DTSTACK.COM',
   hbase.keytab='krb5.keytab',
   hbase.principal='wuren@DTSTACK.COM',
   java.security.krb5.conf='krb5.conf'
@@ -39,5 +43,5 @@ CREATE TABLE dwd_foo(
 INSERT INTO dwd_foo
     SELECT ods_foo.id, dim_foo.name
     FROM ods_foo
-    LEFT JOIN dim_foo
+    JOIN dim_foo
     ON ods_foo.id = dim_foo.rowkey;
